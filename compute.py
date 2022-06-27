@@ -6,7 +6,8 @@ from helpers import parseInputFile
 from bva import produce
 
 # parse the command line arguments
-parser = argparse.ArgumentParser(description='Bitcoin Value Assert Proof of Concept')
+parser = argparse.ArgumentParser(
+    description='Bitcoin Value Assert Proof of Concept')
 parser.add_argument('input',
                     type=lambda x: parseInputFile(x),
                     help='Input file to compute the hash')
