@@ -1,1 +1,4 @@
+argparse
 blake3
+pathlib
+yaml
