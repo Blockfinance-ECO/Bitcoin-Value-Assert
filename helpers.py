@@ -1,6 +1,9 @@
 from argparse import ArgumentTypeError
 from os.path import exists
 
+import re
+import requests
+
 
 def parseInputFile(filepath):
     if not exists(filepath):
@@ -21,3 +24,16 @@ def parseBytes32(value):
     return as_bytes
 
 
+def fetchTXData(txid):
+    url = 'https://www.blockchain.com/btc/tx/{0}'.format(txid)
+    print(url)
+    r = requests.get(url)
+    # get the address
+    pattern = r'(?<=<a href\=\"\/btc\/address\/)[A-Za-z0-9]*(?=\")'
+    res = re.search(pattern, r.text)
+    address = res.group()
+    # get the op-return
+    pattern = r'(?<=OP_RETURN\<\/span\>\<span\ class\=\"sc-1ryi78w-0 cILyoi sc-16b9dsl-1 ZwupP u3ufsr-0 eQTRKC\"\ opacity\=\"1\"\>)[A-Za-z0-9]*(?=\<\/span\>)'
+    res = re.search(pattern, r.text)
+    op_return = res.group()
+    return address, op_return
