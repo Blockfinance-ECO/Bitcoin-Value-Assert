@@ -10,13 +10,7 @@ parser = argparse.ArgumentParser(
     description='Bitcoin Value Assert Proof of Concept')
 parser.add_argument('input',
                     type=lambda x: parseInputFile(x),
-                    help='Input file to compute the hash')
-parser.add_argument('hash',
-                    type=lambda x: parseBytes32(x),
-                    help='Hash from the block')
-parser.add_argument('key',
-                    type=lambda x: parseBytes32(x),
-                    help='Derived key from the verification data')
+                    help='File containing the verification data')
 args = parser.parse_args()
 
 # parse the input file and extract the variables
@@ -27,10 +21,11 @@ with open(args.input) as f:
 # ( normally the bitcoin_address would be taken from the transaction data )
 bitcoin_address = bytes(input_file['bitcoin_address'], 'utf-8')
 
-# ( normally the message would be taken from the verification data )
 message = bytes(input_file['message'], 'utf-8')
+_hash = parseBytes32(input_file['hash'])
+_key = parseBytes32(input_file['key'])
 
 # run the verification
-verify(args.key, bitcoin_address, message, args.hash)
+verify(_key, bitcoin_address, message, _hash)
 print()
 print('valid!')

@@ -49,12 +49,14 @@ derived key
 31888d9ff481c498bc353f8624cdb53fe4cb28544078a9b8fa05f06a93107628
 ```
 
+put this in the `.yml` file containing verification data.
+
 ### Verifying the hash
 
 To verify you may run
 
 ```bash
-$ python verify_hash.py example_input.yml f884e6fd1c328ddf49ab282ec4e647b9532ae91ab23e9307216d2d841ec84782 31888d9ff481c498bc353f8624cdb53fe4cb28544078a9b8fa05f06a93107628
+$ python verify_hash.py example_verification.yml
 ```
 
 and your response will be
@@ -64,13 +66,7 @@ and your response will be
 valid!
 ```
 
-however if you tamper with the data like if you slightly change the hash
-
-```bash
-$ python verify_hash.py example_input.yml f885e6fd1c328ddf49ab282ec4e647b9532ae91ab23e9307216d2d841ec84782 31888d9ff481c498bc353f8624cdb53fe4cb28544078a9b8fa05f06a93107628
-```
-
-you will get an error indicating the hash mismatch
+however if you tamper with the data like if you slightly change the hash you will get an error indicating the hash mismatch
 
 ```
 Traceback (most recent call last):
