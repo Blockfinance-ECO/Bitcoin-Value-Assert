@@ -37,3 +37,19 @@ def fetchTXData(txid):
     res = re.search(pattern, r.text)
     op_return = res.group()
     return address, op_return
+
+
+def decoderOpReturnTrezor(data):
+    value = ''
+    if int(len(data)/2) != 64:
+        raise ValueError('invalid op return for Trezor encoding')
+    for j in range(int(len(data)/2)):
+        delta = 0
+        nb = int(data[2*j]+data[2*j+1])
+        if 48 <= nb+18 <= 57:
+            delta = 18
+        else:
+            delta = 4
+        txt = str(chr(nb+delta))
+        value += txt
+    return parseBytes32(value)

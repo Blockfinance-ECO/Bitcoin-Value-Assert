@@ -56,7 +56,7 @@ put this in the `.yml` file containing verification data.
 To verify you may run
 
 ```bash
-$ python verify_hash.py example_verification.yml
+$ python verify_onchain_hash.py example_onchain_verification.yml
 ```
 
 and your response will be

@@ -2,7 +2,7 @@ import argparse
 import pathlib
 import yaml
 
-from helpers import parseInputFile, parseBytes32, fetchTXData
+from helpers import parseInputFile, parseBytes32, fetchTXData, decoderOpReturnTrezor
 from bva import verify
 
 
@@ -22,5 +22,12 @@ txid = input_file['txid']
 message = bytes(input_file['message'], 'utf-8')
 _key = parseBytes32(input_file['key'])
 
-res, op_return = fetchTXData(txid)
-print(res, op_return)
+bitcoin_address, op_return = fetchTXData(txid)
+bitcoin_address = bytes(bitcoin_address, 'utf-8')
+
+_hash = decoderOpReturnTrezor(op_return)
+
+# run the verification
+verify(_key, bitcoin_address, message, _hash)
+print()
+print('valid!')
