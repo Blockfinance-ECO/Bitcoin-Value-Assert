@@ -51,6 +51,14 @@ derived key
 
 put this in the `.yml` file containing verification data.
 
+### Generating the QR code
+
+You may generate the QR code with the verification data as follows
+
+```bash
+python make_qr_code.py example_onchain_verification.yml example.png
+```
+
 ### Verifying the hash
 
 To verify you may run
@@ -78,3 +86,19 @@ AssertionError
 ```
 
 which is a verification failure!
+
+### Verifying the QR code
+
+Just as you can verify the data from `.yml` file it is also possible to verify from the QR code.
+
+```bash
+$ python verify_qr_code.py example.png
+```
+
+This is not guaranteed to work with QR codes from photos. It is just a demo and needs to accept a QR code that is an output of `make_qr_code.py` script.
+
+## Disclaimer
+
+### QR code encoding
+
+The current implementation does not follow the standard on the QR code encoding. That is because at this stage it is a lot easier to use the transaction hash instead of transaction ID. Keep in mind this is NOT production ready code.

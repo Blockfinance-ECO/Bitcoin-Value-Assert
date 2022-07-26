@@ -1,15 +1,29 @@
+import qrcode
+
 from argparse import ArgumentTypeError
 from os.path import exists
+from PIL import Image
 
 import re
 import requests
 
+# brew install zbar
+# sudo apt-get install libzbar0
+# python -m pip install pyzbar
+
+from pyzbar.pyzbar import decode as dec
 
 def parseInputFile(filepath):
     if not exists(filepath):
         raise ArgumentTypeError('Input file does not exists')
     if not filepath.endswith('.yml'):
         raise ArgumentTypeError('Only .yml file types are currently supported as the input')
+    return filepath
+
+
+def parseQRFile(filepath):
+    if not filepath.endswith('.png'):
+        raise ArgumentTypeError('Only .png file types are currently supported as the type of file')
     return filepath
 
 
@@ -53,3 +67,29 @@ def decoderOpReturnTrezor(data):
         txt = str(chr(nb+delta))
         value += txt
     return parseBytes32(value)
+
+
+def makeQRCode(txid: bytes, key: bytes, message: str, filename: str):
+    data = txid.hex() + key.hex() + message
+
+    QR = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=4,
+        border=4,
+    )
+    QR.add_data(data)
+    QR.make(fit=True)
+    image = QR.make_image(fill_color="black", back_color="white")
+    image.save(filename)
+
+
+def parseQRCode(filename: str):
+    decoded = dec(Image.open(filename))
+    data = decoded[0][0]
+
+    txid = parseBytes32(data[0:64].decode())
+    key = parseBytes32(data[64:128].decode())
+    message = data[128:].decode()
+
+    return txid, key, message
