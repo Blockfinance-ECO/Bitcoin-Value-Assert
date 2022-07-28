@@ -102,3 +102,7 @@ This is not guaranteed to work with QR codes from photos. It is just a demo and 
 ### QR code encoding
 
 The current implementation does not follow the standard on the QR code encoding. That is because at this stage it is a lot easier to use the transaction hash instead of transaction ID. Keep in mind this is NOT production ready code.
+
+## Resources
+
+https://www.dafont.com/monommm-5.font

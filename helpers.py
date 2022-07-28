@@ -1,8 +1,9 @@
 import qrcode
+import textwrap
 
 from argparse import ArgumentTypeError
 from os.path import exists
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from bs4 import BeautifulSoup
 
 import re
@@ -90,6 +91,20 @@ def decoderOpReturnTrezor(data):
     return parseBytes32(value)
 
 
+def renderMessageAsImage(message, width, height):
+    wrapper = textwrap.TextWrapper(width=16)
+    lines = wrapper.wrap(text=message)
+    margin = 10
+    nb_lines = len(lines)
+    wrapped_message = '\n'.join(lines)
+    font = ImageFont.truetype('fonts/monoMMM_5.ttf', 19)
+    font_width, font_height = font.getsize(wrapped_message)
+    txt = Image.new('RGB', (width, font_height*nb_lines + margin), 'white')
+    draw = ImageDraw.Draw(txt)
+    draw.text((2*margin, margin), wrapped_message, font=font, fill='black')
+    return txt
+
+
 def makeQRCode(txid: bytes, key: bytes, message: str, filename: str):
     data = txid.hex() + key.hex() + message
 
@@ -102,7 +117,15 @@ def makeQRCode(txid: bytes, key: bytes, message: str, filename: str):
     QR.add_data(data)
     QR.make(fit=True)
     image = QR.make_image(fill_color="black", back_color="white")
-    image.save(filename)
+    width, height = image.size
+
+    image_msg = renderMessageAsImage(message, width, height)
+    w2, h2 = image_msg.size
+
+    img2 = Image.new("RGB", (width, height + h2), 'white')
+    img2.paste(image_msg, (0, 0))
+    img2.paste(image, (0, h2))
+    img2.save(filename)
 
 
 def parseQRCode(filename: str):
