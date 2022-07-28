@@ -51,5 +51,4 @@ def verify(derived_key: bytes,
     input_value = computeInputValue(bitcoin_address, message)
     # re-calculate the hash
     recalculated_hash = blake3(input_value, key=derived_key).digest()
-    # check if matches
     assert recalculated_hash == _hash

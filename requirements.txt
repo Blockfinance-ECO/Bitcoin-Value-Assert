@@ -4,3 +4,4 @@ pathlib
 yaml
 qrcode
 pillow
+beautifulsoup4

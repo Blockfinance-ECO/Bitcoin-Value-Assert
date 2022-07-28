@@ -3,6 +3,7 @@ import qrcode
 from argparse import ArgumentTypeError
 from os.path import exists
 from PIL import Image
+from bs4 import BeautifulSoup
 
 import re
 import requests
@@ -38,9 +39,10 @@ def parseBytes32(value):
     return as_bytes
 
 
-def fetchTXData(txid):
+def fetchTXMainnetData(txid):
     url = 'https://www.blockchain.com/btc/tx/{0}'.format(txid)
-    print(url)
+    print('fetching...', url)
+    print()
     r = requests.get(url)
     # get the address
     pattern = r'(?<=<a href\=\"\/btc\/address\/)[A-Za-z0-9]*(?=\")'
@@ -50,6 +52,25 @@ def fetchTXData(txid):
     pattern = r'(?<=OP_RETURN\<\/span\>\<span\ class\=\"sc-1ryi78w-0 cILyoi sc-16b9dsl-1 ZwupP u3ufsr-0 eQTRKC\"\ opacity\=\"1\"\>)[A-Za-z0-9]*(?=\<\/span\>)'
     res = re.search(pattern, r.text)
     op_return = res.group()
+    return address, op_return
+
+
+def fetchTXData(txid):
+    url = 'https://www.blockchain.com/btc-testnet/tx/{0}'.format(txid)
+    print('fetching...', url)
+    print()
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, "html.parser")
+    # get the address
+    els = soup.select('#__next > div.sc-1udt3q6-0.irpFhx > div.sc-1udt3q6-1.ijayGs > div > div > div:nth-child(5) > div > div:nth-child(3) > div:nth-child(2) > div.odi4cq-0.gVJWcr > div.ccso3i-0.dJDEkx > div > a')
+    if len(els) == 0:
+        raise Exception('Could not fetch the BTC testnet address')
+    address = els[0].text
+    # get the op-return
+    els = soup.select('#__next > div.sc-1udt3q6-0.irpFhx > div.sc-1udt3q6-1.ijayGs > div > div > div:nth-child(5) > div > div:nth-child(2) > div:nth-child(3) > div > div.ccso3i-0.dJDEkx > div > span:nth-child(2)')
+    if len(els) == 0:
+        raise Exception('Could not fetch the op_return code')
+    op_return = els[0].text
     return address, op_return
 
 

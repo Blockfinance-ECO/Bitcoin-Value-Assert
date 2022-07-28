@@ -22,6 +22,11 @@ with open(args.input) as f:
 bitcoin_address = bytes(input_file['bitcoin_address'], 'utf-8')
 
 message = bytes(input_file['message'], 'utf-8')
+
+print()
+print(input_file['bitcoin_address'])
+print(input_file['message'])
+
 _hash = parseBytes32(input_file['hash'])
 _key = parseBytes32(input_file['key'])
 

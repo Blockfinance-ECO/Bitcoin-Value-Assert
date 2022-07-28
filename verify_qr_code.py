@@ -18,6 +18,10 @@ txid, _key, message = parseQRCode(args.qr_code_file)
 txid = txid.hex()
 
 bitcoin_address, op_return = fetchTXData(txid)
+
+print(bitcoin_address)
+print(message)
+
 bitcoin_address = bytes(bitcoin_address, 'utf-8')
 
 _hash = decoderOpReturnTrezor(op_return)

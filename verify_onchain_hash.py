@@ -23,6 +23,10 @@ message = bytes(input_file['message'], 'utf-8')
 _key = parseBytes32(input_file['key'])
 
 bitcoin_address, op_return = fetchTXData(txid)
+
+print(bitcoin_address)
+print(input_file['message'])
+
 bitcoin_address = bytes(bitcoin_address, 'utf-8')
 
 _hash = decoderOpReturnTrezor(op_return)
