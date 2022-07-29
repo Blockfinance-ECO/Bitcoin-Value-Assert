@@ -22,6 +22,13 @@ def parseInputFile(filepath):
         raise ArgumentTypeError('Only .yml file types are currently supported as the input')
     return filepath
 
+def parseOutputFile(filepath):
+    if exists(filepath):
+        raise ArgumentTypeError('Output file does already exist')
+    if not filepath.endswith('.yml'):
+        raise ArgumentTypeError('Only .yml file types are currently supported as the input')
+    return filepath
+
 
 def parseQRFile(filepath):
     if not filepath.endswith('.png'):
